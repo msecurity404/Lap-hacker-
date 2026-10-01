@@ -351,3 +351,84 @@ body {
   .top-bar { padding:10px 12px; }
   .user-name { font-size:.85rem; }
   .dashboard { padding:18px 14px; }
+
+/* ===== Level 2 - Emails ===== */
+.email-list { display:flex; flex-direction:column; gap:14px; }
+
+.email-item {
+  background:var(--bg); border:1px solid var(--gray);
+  border-radius:12px; padding:16px; transition:.3s;
+}
+.email-item.solved { border-color:var(--green); background:rgba(0,255,136,.05); }
+.email-item.failed { border-color:var(--red); background:rgba(255,56,96,.05); }
+
+.email-head { display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+.email-from { color:var(--yellow); font-size:.9rem; word-break:break-all; }
+.email-subject { color:var(--green); font-weight:700; font-size:1rem; }
+.email-body {
+  background:var(--bg2); padding:12px; border-radius:8px;
+  font-size:.9rem; line-height:1.7; margin-bottom:10px; opacity:.9;
+}
+.email-link { font-size:.85rem; margin-bottom:12px; word-break:break-all; }
+.email-link .mono { color:var(--blue); }
+.email-actions { display:flex; gap:8px; }
+.email-actions button { flex:1; padding:10px; }
+
+.email-clues {
+  display:none; margin-top:12px; padding:12px;
+  background:rgba(255,221,0,.08); border-right:3px solid var(--yellow);
+  border-radius:8px; font-size:.85rem;
+}
+.clue-title { color:var(--yellow); font-weight:700; margin-bottom:6px; }
+.clue-item { padding:3px 0; opacity:.9; }
+
+/* ===== URL Analyzer ===== */
+.url-analysis {
+  background:var(--bg); border:1px solid var(--gray);
+  border-radius:12px; padding:18px; margin-top:15px;
+}
+.url-domain { margin-bottom:12px; }
+.url-label { font-size:.8rem; opacity:.7; margin-bottom:4px; }
+.url-value {
+  color:var(--blue); background:var(--bg2);
+  padding:8px 12px; border-radius:6px;
+  word-break:break-all; font-size:.9rem;
+}
+.url-verdict { font-size:1.2rem; font-weight:700; text-align:center; margin:15px 0; }
+.url-score { text-align:center; font-size:.9rem; opacity:.85; margin-bottom:12px; }
+
+.url-warnings { display:flex; flex-direction:column; gap:6px; }
+.warn-item { padding:8px 12px; border-radius:6px; font-size:.85rem; line-height:1.5; }
+.warn-ok { background:rgba(0,255,136,.08); color:var(--green); border-right:3px solid var(--green); }
+.warn-mid { background:rgba(255,221,0,.08); color:var(--yellow); border-right:3px solid var(--yellow); }
+.warn-high { background:rgba(255,56,96,.08); color:var(--red); border-right:3px solid var(--red); }
+
+/* ===== Phishing Builder ===== */
+.attack-builder {
+  background:var(--bg); border:1px solid var(--gray);
+  border-radius:12px; padding:18px;
+}
+.attack-builder label {
+  display:block; margin:12px 0 6px; color:var(--green);
+  font-size:.9rem; font-weight:700;
+}
+.attack-builder select { cursor:pointer; }
+
+/* ===== Advanced Scenario ===== */
+.scenario-box {
+  background:var(--bg); border:1px solid var(--gray);
+  border-radius:12px; padding:18px; margin-bottom:15px;
+}
+.scenario-num {
+  color:var(--purple); font-weight:700; font-size:.85rem;
+  margin-bottom:10px; font-family:'Share Tech Mono',monospace;
+}
+.scenario-done {
+  text-align:center; color:var(--green);
+  font-size:1.2rem; font-weight:700; padding:20px; line-height:1.8;
+}
+.scenario-actions { display:flex; gap:10px; margin-top:15px; }
+.scenario-actions button { flex:1; }
+.scenario-feedback {
+  margin-top:15px; padding:14px; border-radius:8px;
+  font-weight:700
