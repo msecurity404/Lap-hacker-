@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberLab | مختبر الأمن السيبراني</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- شاشة البداية -->
+  <div id="startScreen" class="screen active">
+    <div class="terminal-box">
+      <div class="terminal-header">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+        <span class="terminal-title">root@cyberlab:~$</span>
+      </div>
+      <div class="terminal-body">
+        <p class="typing">> initializing CyberLab...</p>
+        <p class="typing delay-1">> loading security modules... [OK]</p>
+        <p class="typing delay-2">> welcome, trainee 🕵️</p>
+      </div>
+    </div>
+
+    <h1 class="glitch" data-text="CyberLab">CyberLab</h1>
+    <p class="subtitle">مختبر الأمن السيبراني للمبتدئين</p>
+
+    <button class="btn-start" onclick="startGame()">
+      ▶ ابدأ التدريب
+    </button>
+
+    <div class="stats-preview">
+      <div>🏆 النقاط: <span id="previewScore">0</span></div>
+      <div>🎖️ الشارات: <span id="previewBadges">0</span></div>
+    </div>
+  </div>
+
+  <!-- شاشة اللعبة -->
+  <div id="gameScreen" class="screen">
+    <header class="game-header">
+      <div class="header-item">👤 المتدرب</div>
+      <div class="header-item">🏆 <span id="scoreDisplay">0</span></div>
+      <div class="header-item">🎖️ <span id="badgesDisplay">0</span></div>
+      <button class="btn-reset" onclick="resetGame()">🔄 إعادة</button>
+    </header>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <main class="game-main">
+      <!-- المستوى 1 -->
+      <section id="level1" class="level active">
+        <h2 class="level-title">🎯 المستوى 1: كلمات المرور</h2>
+        <p class="level-desc">
+          مرحباً أيها المتدرب! مهمتك الأولى: اكتشف كلمات المرور الضعيفة،
+          وافهم كيف يفكر الهاكر، وتعلّم كيف تحمي حسابك.
+        </p>
+
+        <div class="tasks-nav">
+          <button class="task-btn active" onclick="showTask(1)">مهمة 1</button>
+          <button class="task-btn" onclick="showTask(2)">مهمة 2</button>
+          <button class="task-btn" onclick="showTask(3)">مهمة 3</button>
+          <button class="task-btn" onclick="showTask(4)">مهمة 4</button>
+        </div>
+
+        <!-- المهمة 1 -->
+        <div id="task1" class="task active">
+          <h3>🔍 صيّاد كلمات المرور الضعيفة</h3>
+          <p>صنّف كل كلمة مرور: <b>ضعيفة</b> أو <b>متوسطة</b> أو <b>قوية</b></p>
+          <div id="passwordList" class="password-list"></div>
+          <p class="task-status" id="task1Status"></p>
+        </div>
+
+        <!-- المهمة 2 -->
+        <div id="task2" class="task">
+          <h3>📊 مقياس القوة</h3>
+          <p>اكتب كلمة مرور وشوف قوتها:</p>
+          <input type="text" id="pwdInput" class="input-field" placeholder="اكتب كلمة المرور..." oninput="checkPassword()">
+          <div class="strength-bar">
+            <div class="strength-fill" id="strengthFill"></div>
+          </div>
+          <p id="strengthText" class="strength-text"></p>
+          <p id="crackTime" class="crack-time"></p>
+        </div>
+
+        <!-- المهمة 3 -->
+        <div id="task3" class="task">
+          <h3>⚔️ هجوم القاموس</h3>
+          <p>شوف كيف البوت يكسر كلمة المرور في ثواني:</p>
+          <input type="text" id="victimPwd" class="input-field" placeholder="اكتب كلمة مرور الضحية..." value="password">
+          <button class="btn-action" onclick="runBruteForce()">🚀 ابدأ الهجوم</button>
+          <div class="terminal-output" id="attackLog"></div>
+        </div>
+
+        <!-- المهمة 4 -->
+        <div id="task4" class="task">
+          <h3>🔐 التحقق بخطوتين</h3>
+          <p>سجّل دخولك وأدخل رمز OTP:</p>
+          <input type="text" id="loginUser" class="input-field" placeholder="اسم المستخدم">
+          <input type="password" id="loginPwd" class="input-field" placeholder="كلمة المرور">
+          <button class="btn-action" onclick="requestOTP()">📩 طلب رمز OTP</button>
+          <div id="otpSection" style="display:none;">
+            <p class="otp-hint">الرمز (سريعاً!): <span id="otpCode" class="otp-code"></span></p>
+            <input type="text" id="otpInput" class="input-field" placeholder="أدخل الرمز" maxlength="6">
+            <button class="btn-action" onclick="verifyOTP()">✅ تحقق</button>
+            <p id="otpTimer" class="otp-timer"></p>
+          </div>
+          <p id="task4Status" class="task-status"></p>
+        </div>
+
+        <!-- شاشة الفوز -->
+        <div id="victoryScreen" class="victory">
+          <h2>🎉 مبروك!</h2>
+          <p>أكملت المستوى 1 بنجاح</p>
+          <div class="badge-earned">👑 Master Level 1</div>
+          <button class="btn-action" onclick="nextLevel()">المستوى التالي 🔜</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/score.js"></script>
+  <script src="js/level1.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
