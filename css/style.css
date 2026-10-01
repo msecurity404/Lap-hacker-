@@ -431,4 +431,14 @@ body {
 .scenario-actions button { flex:1; }
 .scenario-feedback {
   margin-top:15px; padding:14px; border-radius:8px;
-  font-weight:700
+  font-weight:700; line-height:1.7;
+}
+.scenario-feedback.ok { background:rgba(0,255,136,.1); color:var(--green); border-right:4px solid var(--green); }
+.scenario-feedback.err { background:rgba(255,56,96,.1); color:var(--red); border-right:4px solid var(--red); }
+.scenario-why { font-weight:400; margin-top:10px; font-size:.88rem; opacity:.9; }
+
+@media (max-width:640px) {
+  .email-actions { flex-direction:column; }
+  .scenario-actions { flex-direction:column; }
+  .url-value { font-size:.8rem; }
+}
