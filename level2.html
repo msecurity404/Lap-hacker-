@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المستوى 2 | التصيّد الإلكتروني</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body class="level-body">
+
+<header class="level-header">
+  <a href="dashboard.html" class="btn-back">⬅ رجوع</a>
+  <h2>المستوى 2: التصيّد 🎣</h2>
+  <div class="level-score-display">🏆 <span id="liveScore">0</span></div>
+</header>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<main class="level-main">
+
+  <!-- المهمة 1: كشف الإيميلات -->
+  <section class="mission" data-mission="1">
+    <div class="mission-header">
+      <span class="mission-num">مهمة 1</span>
+      <h3>📧 صيّاد الإيميلات المزيفة</h3>
+      <span class="mission-xp">+100 XP</span>
+    </div>
+    <p class="mission-desc">افحص كل إيميل وحدد: حقيقي أم تصيّد؟ ركّز على المرسل، الرابط، والعلامات الحمراء</p>
+    <div id="emailList" class="email-list"></div>
+    <p class="mission-status" id="mission1Status"></p>
+  </section>
+
+  <!-- المهمة 2: تحليل الروابط -->
+  <section class="mission" data-mission="2">
+    <div class="mission-header">
+      <span class="mission-num">مهمة 2</span>
+      <h3>🔗 محلل الروابط المشبوهة</h3>
+      <span class="mission-xp">+80 XP</span>
+    </div>
+    <p class="mission-desc">اكتب أي رابط وسنحلله: النطاق الحقيقي، HTTPS، رموز مشبوهة، تشابه مع مواقع معروفة</p>
+    <input type="text" id="urlInput" class="input-field mono" placeholder="https://example.com" oninput="analyzeURL()">
+    <div class="url-analysis" id="urlAnalysis" style="display:none;">
+      <div class="url-result" id="urlResult"></div>
+      <div class="url-warnings" id="urlWarnings"></div>
+    </div>
+  </section>
+
+  <!-- المهمة 3: شن هجوم تصيّد -->
+  <section class="mission" data-mission="3">
+    <div class="mission-header">
+      <span class="mission-num">مهمة 3</span>
+      <h3>🎣 مختبر الهجوم — كن المهاجم</h3>
+      <span class="mission-xp">+120 XP</span>
+    </div>
+    <p class="mission-desc">أنت الآن المهاجم. اختر الهدف، الطُعم، والرابط — وشوف نسبة نجاح هجومك</p>
+
+    <div class="attack-builder">
+      <label>🎯 اختر الهدف:</label>
+      <select id="targetSelect" class="input-field">
+        <option value="employee">👨‍💼 موظف عادي</option>
+        <option value="manager">👔 مدير قسم</option>
+        <option value="it">💻 مسؤول IT</option>
+        <option value="ceo">👑 المدير التنفيذي (CEO)</option>
+      </select>
+
+      <label>🎣 اختر نوع الطُعم:</label>
+      <select id="baitSelect" class="input-field">
+        <option value="prize">🎁 ربحت جائزة!</option>
+        <option value="password">🔐 يجب تغيير كلمة المرور فوراً</option>
+        <option value="invoice">📄 فاتورة غير مدفوعة</option>
+        <option value="urgent">🚨 تنبيه أمني عاجل</option>
+      </select>
+
+      <label>🔗 اختر نوع الرابط:</label>
+      <select id="linkSelect" class="input-field">
+        <option value="real">✅ رابط حقيقي</option>
+        <option value="fake">❌ رابط مزيف (typosquatting)</option>
+        <option value="redirect">⚠️ رابط معاد توجيهه</option>
+      </select>
+
+      <button class="btn-main" onclick="launchPhishing()">🚀 شنّ الهجوم</button>
+    </div>
+
+    <div class="terminal-box-hack" style="margin-top:15px;">
+      <div class="terminal-top">
+        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        <span class="term-title">phish@cyberlab:~#</span>
+      </div>
+      <div class="terminal-content" id="phishTerminal">
+        <p class="term-line">> في انتظار الأمر...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- المهمة 4: التصيّد المتقدم -->
+  <section class="mission" data-mission="4">
+    <div class="mission-header">
+      <span class="mission-num">مهمة 4</span>
+      <h3>🛡️ التصيّد المتقدم (Spear Phishing)</h3>
+      <span class="mission-xp">+100 XP</span>
+    </div>
+    <p class="mission-desc">الهجمات المتقدمة صعبة الكشف. اكتشف العلامات الخفية في كل سيناريو</p>
+    <div id="advancedScenario" class="scenario-box"></div>
+    <div class="scenario-actions" id="scenarioActions"></div>
+    <p class="mission-status" id="mission4Status"></p>
+  </section>
+
+  <!-- شاشة التقييم النهائي -->
+  <div class="final-report" id="finalReport">
+    <div class="report-header">
+      <h2>🏆 تقرير المستوى 2</h2>
+      <p>تحليل أدائك الكامل</p>
+    </div>
+    <div class="report-body">
+      <div class="report-rank" id="reportRank">-</div>
+      <div class="report-stats">
+        <div class="r-stat"><span>XP المكتسب</span><strong id="reportXP">0</strong></div>
+        <div class="r-stat"><span>المهام المنجزة</span><strong id="reportTasks">0/4</strong></div>
+        <div class="r-stat"><span>الشارات</span><strong id="reportBadges">0</strong></div>
+        <div class="r-stat"><span>الدقة</span><strong id="reportAccuracy">-%</strong></div>
+      </div>
+      <div class="report-feedback" id="reportFeedback"></div>
+      <button class="btn-main" onclick="location.href='dashboard.html'">🎯 رجوع للمستويات</button>
+    </div>
+  </div>
+
+</main>
+
+<script src="js/game.js"></script>
+<script src="js/level2.js"></script>
+</body>
+</html>
