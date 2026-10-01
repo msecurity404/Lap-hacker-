@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberLab | لوحة المهام</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="user-info">
+    <span class="user-avatar" id="userAvatar">👨‍💻</span>
+    <div>
+      <div class="user-name" id="userNameDisplay">-</div>
+      <div class="user-rank" id="userRankDisplay">مبتدئ</div>
+    </div>
+  </div>
+  <div class="xp-bar-container">
+    <div class="xp-label">
+      <span id="levelBadge">Lv.1</span>
+      <span id="xpText">0 / 100 XP</span>
+    </div>
+    <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
+  </div>
+  <button class="btn-logout" onclick="logout()">🚪 خروج</button>
+</header>
+
+<main class="dashboard">
+  <h1 class="page-title">🎯 خريطة المستويات</h1>
+
+  <div class="levels-grid">
+    <!-- المستوى 1 -->
+    <a href="level1.html" class="level-card unlocked">
+      <div class="level-num">01</div>
+      <div class="level-icon">🔑</div>
+      <h3>كلمات المرور</h3>
+      <p>اكتشف، اكسر، احمِ</p>
+      <div class="level-progress">
+        <div class="level-progress-fill" id="lvl1Progress"></div>
+      </div>
+      <span class="level-status" id="lvl1Status">ابدأ ▶</span>
+    </a>
+
+    <!-- المستوى 2 - مقفل -->
+    <div class="level-card locked">
+      <div class="level-num">02</div>
+      <div class="level-icon">🎣</div>
+      <h3>التصيّد الإلكتروني</h3>
+      <p>ميّز المزيف من الحقيقي</p>
+      <span class="level-status">🔒 مقفل</span>
+    </div>
+
+    <!-- المستوى 3 -->
+    <div class="level-card locked">
+      <div class="level-num">03</div>
+      <div class="level-icon">🌐</div>
+      <h3>تحليل الشبكات</h3>
+      <p>IP, Ports, Packets</p>
+      <span class="level-status">🔒 مقفل</span>
+    </div>
+
+    <!-- المستوى 4 -->
+    <div class="level-card locked">
+      <div class="level-num">04</div>
+      <div class="level-icon">💻</div>
+      <h3>Linux Terminal</h3>
+      <p>أوامر حقيقية</p>
+      <span class="level-status">🔒 مقفل</span>
+    </div>
+
+    <!-- المستوى 5 -->
+    <div class="level-card locked">
+      <div class="level-num">05</div>
+      <div class="level-icon">🕸️</div>
+      <h3>ثغرات الويب</h3>
+      <p>XSS, SQLi, CSRF</p>
+      <span class="level-status">🔒 مقفل</span>
+    </div>
+
+    <!-- المستوى النهائي -->
+    <div class="level-card locked final">
+      <div class="level-num">★</div>
+      <div class="level-icon">👑</div>
+      <h3>التحدي النهائي</h3>
+      <p>CTF مصغّر</p>
+      <span class="level-status">🔒 مقفل</span>
+    </div>
+  </div>
+
+  <!-- لوحة الإحصائيات -->
+  <section class="stats-panel">
+    <h2>📊 إحصائياتك</h2>
+    <div class="stats-grid">
+      <div class="stat-box"><span class="stat-num" id="statScore">0</span><span>نقطة</span></div>
+      <div class="stat-box"><span class="stat-num" id="statBadges">0</span><span>شارة</span></div>
+      <div class="stat-box"><span class="stat-num" id="statTasks">0</span><span>مهمة منجزة</span></div>
+      <div class="stat-box"><span class="stat-num" id="statRank">#--</span><span>تصنيفك</span></div>
+    </div>
+  </section>
+</main>
+
+<script src="js/game.js"></script>
+</body>
+</html>
