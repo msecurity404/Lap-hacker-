@@ -1,0 +1,437 @@
+/* ===== Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Cairo', sans-serif;
+}
+
+:root {
+  --bg-dark: #0a0e0a;
+  --bg-darker: #050705;
+  --green: #00ff88;
+  --green-dim: #00cc6a;
+  --red: #ff2e5b;
+  --yellow: #ffcc00;
+  --blue: #00d4ff;
+  --text: #d4ffd4;
+  --gray: #1a2a1a;
+}
+
+body {
+  background: var(--bg-dark);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 212, 255, 0.05) 0%, transparent 50%);
+}
+
+/* ===== Screens ===== */
+.screen {
+  display: none;
+  min-height: 100vh;
+  padding: 20px;
+}
+.screen.active { display: block; }
+
+#startScreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  text-align: center;
+}
+#startScreen.active { display: flex; }
+
+/* ===== Terminal Box ===== */
+.terminal-box {
+  width: 100%;
+  max-width: 550px;
+  background: var(--bg-darker);
+  border: 1px solid var(--green-dim);
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+  overflow: hidden;
+}
+
+.terminal-header {
+  background: #111;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--green-dim);
+}
+
+.dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+}
+.dot.red { background: #ff5f56; }
+.dot.yellow { background: #ffbd2e; }
+.dot.green { background: #27c93f; }
+
+.terminal-title {
+  margin-right: auto;
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--green);
+  font-size: 13px;
+}
+
+.terminal-body {
+  padding: 20px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+  color: var(--green);
+  text-align: right;
+  min-height: 130px;
+}
+
+.terminal-body p { margin-bottom: 6px; }
+
+.typing {
+  opacity: 0;
+  animation: fadeIn 0.8s forwards;
+}
+.delay-1 { animation-delay: 0.6s; }
+.delay-2 { animation-delay: 1.2s; }
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* ===== Glitch Title ===== */
+.glitch {
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 900;
+  color: var(--green);
+  text-shadow: 0 0 20px var(--green);
+  position: relative;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+}
+.glitch::before {
+  color: var(--red);
+  animation: glitch1 2s infinite;
+}
+.glitch::after {
+  color: var(--blue);
+  animation: glitch2 2s infinite;
+}
+@keyframes glitch1 {
+  0%, 90%, 100% { transform: translate(0); }
+  92% { transform: translate(-2px, 2px); }
+  94% { transform: translate(2px, -2px); }
+}
+@keyframes glitch2 {
+  0%, 90%, 100% { transform: translate(0); }
+  93% { transform: translate(2px, 1px); }
+  95% { transform: translate(-2px, -1px); }
+}
+
+.subtitle {
+  font-size: clamp(1rem, 3vw, 1.3rem);
+  color: var(--text);
+  opacity: 0.85;
+}
+
+/* ===== Buttons ===== */
+.btn-start, .btn-action {
+  background: transparent;
+  color: var(--green);
+  border: 2px solid var(--green);
+  padding: 14px 40px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: inherit;
+}
+.btn-start:hover, .btn-action:hover {
+  background: var(--green);
+  color: var(--bg-dark);
+  box-shadow: 0 0 25px var(--green);
+  transform: translateY(-2px);
+}
+
+.btn-reset {
+  background: transparent;
+  color: var(--red);
+  border: 1px solid var(--red);
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ===== Stats Preview ===== */
+.stats-preview {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 1rem;
+  color: var(--text);
+  opacity: 0.8;
+}
+
+/* ===== Game Header ===== */
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  background: var(--bg-darker);
+  border: 1px solid var(--green-dim);
+  border-radius: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.header-item {
+  font-weight: 700;
+  color: var(--green);
+  font-size: 0.95rem;
+}
+
+/* ===== Progress Bar ===== */
+.progress-bar {
+  height: 8px;
+  background: var(--gray);
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 25px;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--green-dim), var(--green));
+  transition: width 0.6s ease;
+  box-shadow: 0 0 15px var(--green);
+}
+
+/* ===== Game Main ===== */
+.game-main {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.level-title {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  color: var(--green);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.level-desc {
+  text-align: center;
+  opacity: 0.85;
+  margin-bottom: 25px;
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+/* ===== Tasks Nav ===== */
+.tasks-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.task-btn {
+  background: var(--bg-darker);
+  color: var(--text);
+  border: 1px solid var(--green-dim);
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+.task-btn:hover { border-color: var(--green); }
+.task-btn.active {
+  background: var(--green);
+  color: var(--bg-dark);
+  box-shadow: 0 0 15px var(--green);
+}
+
+/* ===== Task ===== */
+.task { display: none; animation: slideIn 0.4s; }
+.task.active { display: block; }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.task h3 {
+  color: var(--green);
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+}
+.task > p {
+  margin-bottom: 18px;
+  line-height: 1.7;
+  opacity: 0.9;
+}
+
+/* ===== Password List (Task 1) ===== */
+.password-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.password-item {
+  background: var(--bg-darker);
+  border: 1px solid var(--green-dim);
+  padding: 12px 15px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.password-value {
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--yellow);
+  font-size: 1rem;
+  word-break: break-all;
+}
+
+.password-options {
+  display: flex;
+  gap: 6px;
+}
+
+.pwd-btn {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid;
+  font-family: inherit;
+  background: transparent;
+}
+.pwd-btn.weak { color: var(--red); border-color: var(--red); }
+.pwd-btn.medium { color: var(--yellow); border-color: var(--yellow); }
+.pwd-btn.strong { color: var(--green); border-color: var(--green); }
+.pwd-btn:hover { opacity: 0.7; }
+.pwd-btn.correct { background: var(--green); color: var(--bg-dark); }
+.pwd-btn.wrong { background: var(--red); color: white; }
+
+/* ===== Inputs ===== */
+.input-field {
+  width: 100%;
+  padding: 12px 15px;
+  background: var(--bg-darker);
+  border: 1px solid var(--green-dim);
+  border-radius: 8px;
+  color: var(--green);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1rem;
+  margin-bottom: 15px;
+  outline: none;
+}
+.input-field:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+}
+
+/* ===== Strength Bar (Task 2) ===== */
+.strength-bar {
+  height: 12px;
+  background: var(--gray);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.strength-fill {
+  height: 100%;
+  width: 0%;
+  transition: all 0.4s;
+  border-radius: 6px;
+}
+.strength-text { font-weight: 700; margin-bottom: 8px; }
+.crack-time { font-size: 0.9rem; opacity: 0.85; }
+
+/* ===== Terminal Output (Task 3) ===== */
+.terminal-output {
+  background: var(--bg-darker);
+  border: 1px solid var(--green-dim);
+  border-radius: 8px;
+  padding: 15px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--green);
+  max-height: 250px;
+  overflow-y: auto;
+  margin-top: 15px;
+  min-height: 60px;
+  line-height: 1.6;
+}
+.terminal-output .err { color: var(--red); }
+.terminal-output .ok { color: var(--green); }
+
+/* ===== OTP (Task 4) ===== */
+.otp-hint {
+  background: rgba(255, 204, 0, 0.1);
+  border: 1px dashed var(--yellow);
+  padding: 10px;
+  border-radius: 6px;
+  color: var(--yellow);
+  margin-bottom: 12px;
+}
+.otp-code {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+}
+.otp-timer { color: var(--red); font-weight: 700; }
+
+.task-status { font-weight: 700; margin-top: 15px; }
+
+/* ===== Victory ===== */
+.victory {
+  display: none;
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--bg-darker);
+  border: 2px solid var(--green);
+  border-radius: 15px;
+  margin-top: 30px;
+  box-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
+}
+.victory.show { display: block; animation: slideIn 0.5s; }
+.victory h2 { color: var(--green); font-size: 2rem; margin-bottom: 15px; }
+.badge-earned {
+  font-size: 1.5rem;
+  color: var(--yellow);
+  margin: 20px 0;
+  text-shadow: 0 0 20px var(--yellow);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+  .game-header { font-size: 0.85rem; }
+  .header-item { font-size: 0.85rem; }
+  .terminal-body { font-size: 12px; padding: 15px; }
+  .password-item { flex-direction: column; align-items: flex-start; }
+  .password-options { width: 100%; justify-content: space-between; }
+  .pwd-btn { flex: 1; }
+  .btn-start { padding: 12px 25px; font-size: 1rem; }
+}
