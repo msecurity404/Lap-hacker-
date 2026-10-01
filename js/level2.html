@@ -1,0 +1,453 @@
+// ===== المستوى 2: التصيّد الإلكتروني =====
+
+// ---------- المهمة 1: كشف الإيميلات ----------
+const emails = [
+  {
+    from: 'security@paypa1.com',
+    subject: '🚨 تم تعليق حسابك!',
+    body: 'عزيزي العميل، لاحظنا نشاطاً مشبوهاً في حسابك. يرجى تسجيل الدخول فوراً لتأكيد هويتك.',
+    link: 'http://paypa1-verify.com/login',
+    isPhish: true,
+    clues: ['النطاق "paypa1" بدل "paypal" (بحرف 1 بدل L)', 'الرابط http بدل https', 'اسم نطاق غريب']
+  },
+  {
+    from: 'noreply@github.com',
+    subject: 'تقرير أسبوعي عن نشاطك',
+    body: 'مرحباً، هذا ملخص نشاطك الأسبوعي على GitHub. اضغط لعرض التقارير.',
+    link: 'https://github.com/dashboard',
+    isPhish: false,
+    clues: ['النطاق الرسمي github.com', 'الرابط https آمن']
+  },
+  {
+    from: 'support@micros0ft-security.com',
+    subject: '⚠️ تم اختراق جهازك!',
+    body: 'رصدنا فيروساً في جهازك. اتصل بالدعم فوراً على الرقم المرفق',
+    link: 'tel:+1-XXX-XXX-XXXX',
+    isPhish: true,
+    clues: ['الاستعجال + التهديد', 'اسم النطاق فيه صفر بدل o', 'يطلب الاتصال برقم خارجي']
+  },
+  {
+    from: 'no-reply@accounts.google.com',
+    subject: 'تنبيه: تسجيل دخول جديد',
+    body: 'تم تسجيل دخول جديد لحسابك من جهاز iPhone في الرياض. إذا لم تكن أنت، اضغط هنا',
+    link: 'https://accounts.google.com/security',
+    isPhish: false,
+    clues: ['النطاق الرسمي google.com', 'صياغة احترافية']
+  },
+  {
+    from: 'hr@company-hr-portal.net',
+    subject: 'مكافأة نهاية السنة 🎉',
+    body: 'مبروك! تم اختيارك للمكافأة. املأ بياناتك البنكية خلال 24 ساعة',
+    link: 'http://company-hr-portal.net/claim',
+    isPhish: true,
+    clues: ['يطلب بيانات بنكية', 'وقت ضيق (24 ساعة)', 'نطاق .net غير رسمي', 'http بدل https']
+  },
+  {
+    from: 'billing@netflix.com',
+    subject: 'تم تجديد اشتراكك',
+    body: 'تم خصم 14.99$ من حسابك. يمكنك إدارة اشتراكك من الحساب',
+    link: 'https://netflix.com/account',
+    isPhish: false,
+    clues: ['النطاق الرسمي', 'لا يطلب أي بيانات']
+  },
+  {
+    from: 'admin@whatsapp-verify.info',
+    subject: 'تفعيل واتساب',
+    body: 'يرجى إدخال رمز التحقق الذي وصلك لتأكيد حسابك',
+    link: 'http://whatsapp-verify.info/code',
+    isPhish: true,
+    clues: ['يطلب رمز التحقق OTP', 'نطاق .info غريب', 'اسم نطاق غير رسمي']
+  },
+  {
+    from: 'team@linkedin.com',
+    subject: 'شخص ما شاهد ملفك',
+    body: '5 أشخاص شاهدوا ملفك الشخصي هذا الأسبوع',
+    link: 'https://linkedin.com/me',
+    isPhish: false,
+    clues: ['النطاق الرسمي', 'لا يطلب بيانات']
+  }
+];
+
+let task1Solved = 0;
+
+function renderEmails() {
+  const c = document.getElementById('emailList');
+  if (!c) return;
+  c.innerHTML = '';
+  emails.forEach((e, i) => {
+    const div = document.createElement('div');
+    div.className = 'email-item';
+    div.innerHTML = `
+      <div class="email-head">
+        <div class="email-from">📧 <b>${e.from}</b></div>
+        <div class="email-subject">${e.subject}</div>
+      </div>
+      <div class="email-body">${e.body}</div>
+      <div class="email-link">🔗 <span class="mono">${e.link}</span></div>
+      <div class="email-actions">
+        <button class="pwd-btn strong" onclick="classifyEmail(${i}, false)">✅ حقيقي</button>
+        <button class="pwd-btn weak" onclick="classifyEmail(${i}, true)">🎣 تصيّد</button>
+      </div>
+      <div class="email-clues" id="clues${i}"></div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+function classifyEmail(i, choice) {
+  const email = emails[i];
+  const item = document.querySelectorAll('.email-item')[i];
+  const btns = item.querySelectorAll('.email-actions button');
+  btns.forEach(b => b.disabled = true);
+
+  const correct = (choice === email.isPhish);
+  const cluesDiv = document.getElementById('clues' + i);
+  cluesDiv.style.display = 'block';
+  cluesDiv.innerHTML = `<div class="clue-title">🔍 العلامات:</div>` +
+    email.clues.map(c => `<div class="clue-item">• ${c}</div>`).join('');
+
+  if (correct) {
+    item.classList.add('solved');
+    Game.data.stats.correct++;
+    task1Solved++;
+    document.getElementById('mission1Status').textContent = `✅ صحيح! (${task1Solved}/${emails.length})`;
+    document.getElementById('mission1Status').style.color = 'var(--green)';
+
+    if (task1Solved === emails.length) {
+      Game.data.badges.push({ id: 'phishHunter', name: '🎣 صيّاد التصيّد' });
+      Game.completeMission('lvl2_task1', 100);
+      document.querySelector('[data-mission="1"]').classList.add('completed');
+      document.getElementById('mission1Status').textContent = '🏆 المهمة مكتملة! +100 XP';
+    }
+  } else {
+    item.classList.add('failed');
+    Game.data.stats.wrong++;
+    document.getElementById('mission1Status').textContent = '❌ خطأ — اقرأ العلامات بعناية';
+    document.getElementById('mission1Status').style.color = 'var(--red)';
+  }
+  Game.save();
+}
+
+// ---------- المهمة 2: تحليل الروابط ----------
+function analyzeURL() {
+  const url = document.getElementById('urlInput').value.trim();
+  const box = document.getElementById('urlAnalysis');
+  const res = document.getElementById('urlResult');
+  const warn = document.getElementById('urlWarnings');
+
+  if (!url || !url.includes('.')) {
+    box.style.display = 'none';
+    return;
+  }
+  box.style.display = 'block';
+
+  let score = 100;
+  let warnings = [];
+
+  // 1. HTTPS
+  if (!url.startsWith('https://')) {
+    score -= 25;
+    warnings.push({ level: 'high', text: '⚠️ لا يستخدم HTTPS — الاتصال غير مشفر' });
+  } else {
+    warnings.push({ level: 'ok', text: '✅ يستخدم HTTPS' });
+  }
+
+  // 2. طول النطاق
+  const domainMatch = url.match(/^(?:https?:\/\/)?([^\/]+)/);
+  const domain = domainMatch ? domainMatch[1] : '';
+  if (domain.length > 30) {
+    score -= 15;
+    warnings.push({ level: 'mid', text: '⚠️ النطاق طويل جداً (' + domain.length + ' حرف)' });
+  }
+
+  // 3. أرقام بدل حروف
+  if (/\d/.test(domain) && /[a-z]/.test(domain)) {
+    if (/(0|1|3|5|7)/.test(domain)) {
+      score -= 20;
+      warnings.push({ level: 'high', text: '🚨 يحتوي أرقاماً قد تخدع (0 بدل o، 1 بدل l)' });
+    }
+  }
+
+  // 4. علامة @ في الرابط
+  if (url.includes('@')) {
+    score -= 30;
+    warnings.push({ level: 'high', text: '🚨 يحتوي @ — قد يخفي النطاق الحقيقي!' });
+  }
+
+  // 5. نطاقات مشبوهة
+  const susTLDs = ['.info', '.tk', '.ml', '.ga', '.cf', '.gq', '.xyz', '.top'];
+  if (susTLDs.some(t => domain.endsWith(t))) {
+    score -= 20;
+    warnings.push({ level: 'high', text: '⚠️ امتداد نطاق مشبوه (يُستخدم كثيراً في التصيّد)' });
+  }
+
+  // 6. كلمات مفتاحية
+  const keywords = ['login', 'verify', 'secure', 'account', 'update', 'confirm', 'free', 'prize'];
+  const found = keywords.filter(k => url.toLowerCase().includes(k));
+  if (found.length >= 2) {
+    score -= 15;
+    warnings.push({ level: 'mid', text: '⚠️ يحتوي كلمات إغراء: ' + found.join(', ') });
+  }
+
+  // 7. تشابه مع مواقع معروفة (typosquatting)
+  const knownSites = ['google', 'facebook', 'paypal', 'microsoft', 'apple', 'netflix', 'amazon', 'whatsapp', 'instagram'];
+  for (const site of knownSites) {
+    if (domain.toLowerCase().includes(site) && !domain.toLowerCase().includes(site + '.com')) {
+      score -= 25;
+      warnings.push({ level: 'high', text: `🚨 يشبه "${site}" لكنه ليس النطاق الرسمي!` });
+      break;
+    }
+  }
+
+  // 8. عدد النقاط
+  const dots = (domain.match(/\./g) || []).length;
+  if (dots >= 3) {
+    score -= 10;
+    warnings.push({ level: 'mid', text: '⚠️ نطاق فرعي عميق (' + dots + ' نقاط)' });
+  }
+
+  if (warnings.filter(w => w.level !== 'ok').length === 0) {
+    warnings.push({ level: 'ok', text: '✅ لم نجد أي علامة مشبوهة' });
+  }
+
+  score = Math.max(0, Math.min(100, score));
+
+  let verdict, color;
+  if (score >= 80) { verdict = '✅ آمن — يبدو موثوقاً'; color = 'var(--green)'; }
+  else if (score >= 50) { verdict = '🟡 مشبوه — كن حذراً'; color = 'var(--yellow)'; }
+  else { verdict = '🚨 خطير — لا تفتحه!'; color = 'var(--red)'; }
+
+  res.innerHTML = `
+    <div class="url-domain">
+      <div class="url-label">النطاق الحقيقي:</div>
+      <div class="url-value mono">${domain}</div>
+    </div>
+    <div class="url-verdict" style="color:${color}">${verdict}</div>
+    <div class="url-score">درجة الأمان: <b style="color:${color}">${score}/100</b></div>
+  `;
+
+  warn.innerHTML = warnings.map(w =>
+    `<div class="warn-item warn-${w.level}">${w.text}</div>`
+  ).join('');
+
+  // إذا اختبر 3 روابط مشبوهة صح
+  if (score < 50 && !Game.data._task2Progress) Game.data._task2Progress = 0;
+  if (score < 50) {
+    Game.data._task2Progress = (Game.data._task2Progress || 0) + 1;
+    if (Game.data._task2Progress >= 2 && !Game.data.completedMissions.includes('lvl2_task2')) {
+      Game.completeMission('lvl2_task2', 80);
+      document.querySelector('[data-mission="2"]').classList.add('completed');
+    }
+  }
+}
+
+// ---------- المهمة 3: شن هجوم ----------
+const targets = {
+  employee: { vigilance: 40, name: 'موظف عادي' },
+  manager: { vigilance: 55, name: 'مدير قسم' },
+  it: { vigilance: 85, name: 'مسؤول IT' },
+  ceo: { vigilance: 70, name: 'المدير التنفيذي' }
+};
+
+const baits = {
+  prize: { power: 30, name: 'جائزة' },
+  password: { power: 45, name: 'تغيير كلمة المرور' },
+  invoice: { power: 50, name: 'فاتورة' },
+  urgent: { power: 60, name: 'تنبيه أمني' }
+};
+
+const linkTypes = {
+  real: { effectiveness: 10, name: 'رابط حقيقي' },
+  fake: { effectiveness: 40, name: 'رابط مزيف (typosquatting)' },
+  redirect: { effectiveness: 30, name: 'رابط معاد توجيهه' }
+};
+
+function launchPhishing() {
+  const t = targets[document.getElementById('targetSelect').value];
+  const b = baits[document.getElementById('baitSelect').value];
+  const l = linkTypes[document.getElementById('linkSelect').value];
+  const term = document.getElementById('phishTerminal');
+  term.innerHTML = '';
+
+  const successRate = Math.min(95, Math.max(5,
+    (b.power + l.effectiveness) - t.vigilance + 40
+  ));
+
+  log2(`> [INIT] بدء عملية تصيّد...`);
+  log2(`> [TARGET] ${t.name} (يقظته: ${t.vigilance}%)`);
+  log2(`> [BAIT] ${b.name} (قوة: ${b.power}%)`);
+  log2(`> [LINK] ${l.name} (فعالية: ${l.effectiveness}%)`);
+  log2(`> [CALC] جاري حساب نسبة النجاح...`);
+
+  let i = 0;
+  const steps = [
+    '> [STEP 1] تجهيز صفحة تسجيل دخول مزيفة...',
+    '> [STEP 2] إرسال الإيميل للهدف...',
+    '> [STEP 3] انتظار فتح الإيميل...',
+    '> [STEP 4] تتبع تفاعل الهدف...',
+  ];
+
+  const interval = setInterval(() => {
+    if (i < steps.length) {
+      log2(steps[i]);
+      i++;
+    } else {
+      clearInterval(interval);
+      log2('');
+      log2(`> [RESULT] نسبة نجاح الهجوم: ${successRate}%`,
+        successRate >= 60 ? 'err' : successRate >= 30 ? 'warn' : 'ok');
+
+      if (successRate >= 60) {
+        log2(`> [!!!] ⚠️ الهجوم نجح! وقع الهدف في الفخ`, 'err');
+        log2(`> [LESSON] 💡 لهذا السبب يجب تدريب الموظفين باستمرار`, 'warn');
+      } else if (successRate >= 30) {
+        log2(`> [WARN] ⚠️ الهجوم ممكن لكن الهدف قد يشك`, 'warn');
+      } else {
+        log2(`> [OK] ✅ فشل الهجوم — الهدف منتبه!`, 'ok');
+        log2(`> [LESSON] 💡 الوصول لموظف IT مهمة صعبة`, 'ok');
+      }
+
+      Game.completeMission('lvl2_task3', 120);
+      document.querySelector('[data-mission="3"]').classList.add('completed');
+    }
+  }, 500);
+}
+
+function log2(text, type = '') {
+  const term = document.getElementById('phishTerminal');
+  const p = document.createElement('div');
+  p.className = 'term-line ' + type;
+  p.textContent = text;
+  term.appendChild(p);
+  term.scrollTop = term.scrollHeight;
+}
+
+// ---------- المهمة 4: سيناريو متقدم ----------
+const scenarios = [
+  {
+    from: 'ceo@company-name.com',
+    subject: 'تحويل عاجل - سري',
+    body: 'أنا المدير التنفيذي، أحتاج تحويل 5000$ لحساب مورد بشكل عاجل. لا تخبر أحداً، هذا سري.',
+    correct: 'phish',
+    why: '🚨 Business Email Compromise (BEC) — المهاجم ينتحل شخصية المدير ويستغل السرية والعجلة. الشركات الحقيقية لا تطلب تحويلات مالية عبر إيميل بسرية.'
+  },
+  {
+    from: 'hr@company.com',
+    subject: 'تحديث بيانات الموظفين',
+    body: 'يرجى الدخول إلى بوابة الموظفين الرسمية وتحديث بياناتك السنوية.',
+    correct: 'real',
+    why: '✅ إجراء داخلي روتيني — لكن تحقق دائماً من الرابط قبل الدخول'
+  },
+  {
+    from: 'no-reply@docusign-secure.net',
+    subject: 'وثيقة تنتظر توقيعك',
+    body: 'لديك وثيقة من مورد تحتاج توقيعك فوراً. اضغط للدخول.',
+    correct: 'phish',
+    why: '🚨 نطاق "docusign-secure.net" ليس النطاق الرسمي "docusign.com". إضافة كلمات مثل "secure" علامة كلاسيكية.'
+  }
+];
+
+let scenarioIndex = 0;
+let scenarioCorrect = 0;
+
+function renderScenario() {
+  const box = document.getElementById('advancedScenario');
+  const actions = document.getElementById('scenarioActions');
+
+  if (scenarioIndex >= scenarios.length) {
+    box.innerHTML = `<div class="scenario-done">🎉 أكملت كل السيناريوهات!<br>نتيجة: ${scenarioCorrect}/${scenarios.length}</div>`;
+    actions.innerHTML = '';
+    return;
+  }
+
+  const s = scenarios[scenarioIndex];
+  box.innerHTML = `
+    <div class="scenario-num">سيناريو ${scenarioIndex + 1} / ${scenarios.length}</div>
+    <div class="email-item">
+      <div class="email-head">
+        <div class="email-from">📧 <b>${s.from}</b></div>
+        <div class="email-subject">${s.subject}</div>
+      </div>
+      <div class="email-body">${s.body}</div>
+    </div>
+  `;
+
+  actions.innerHTML = `
+    <button class="pwd-btn weak" onclick="answerScenario('phish')">🎣 تصيّد</button>
+    <button class="pwd-btn strong" onclick="answerScenario('real')">✅ حقيقي</button>
+  `;
+}
+
+function answerScenario(answer) {
+  const s = scenarios[scenarioIndex];
+  const actions = document.getElementById('scenarioActions');
+  const box = document.getElementById('advancedScenario');
+
+  const correct = (answer === s.correct);
+  if (correct) {
+    scenarioCorrect++;
+    Game.data.stats.correct++;
+  } else {
+    Game.data.stats.wrong++;
+  }
+
+  box.innerHTML += `
+    <div class="scenario-feedback ${correct ? 'ok' : 'err'}">
+      ${correct ? '✅ إجابة صحيحة!' : '❌ إجابة خاطئة'}
+      <div class="scenario-why">${s.why}</div>
+    </div>
+  `;
+  actions.innerHTML = `<button class="btn-main" onclick="nextScenario()">التالي ➡</button>`;
+  Game.save();
+}
+
+function nextScenario() {
+  scenarioIndex++;
+  if (scenarioIndex >= scenarios.length) {
+    document.getElementById('mission4Status').textContent = `🏆 ${scenarioCorrect}/${scenarios.length} صحيح`;
+    document.getElementById('mission4Status').style.color = 'var(--green)';
+    Game.completeMission('lvl2_task4', 100);
+    document.querySelector('[data-mission="4"]').classList.add('completed');
+  }
+  renderScenario();
+}
+
+// ---------- تهيئة ----------
+document.addEventListener('DOMContentLoaded', () => {
+  if (!Game.load()) return;
+  renderEmails();
+  renderScenario();
+
+  // استرجاع الحالة
+  ['lvl2_task1','lvl2_task2','lvl2_task3','lvl2_task4'].forEach((m, i) => {
+    if (Game.data.completedMissions.includes(m)) {
+      document.querySelector(`[data-mission="${i+1}"]`)?.classList.add('completed');
+    }
+  });
+
+  // progress
+  const done = Game.data.completedMissions.filter(m => m.startsWith('lvl2_')).length;
+  document.getElementById('progressFill').style.width = (done / 4 * 100) + '%';
+
+  if (done === 4) {
+    setTimeout(() => {
+      const report = document.getElementById('finalReport');
+      report.classList.add('show');
+      const rank = Game.getRank();
+      document.getElementById('reportRank').textContent = rank.name;
+      document.getElementById('reportXP').textContent = Game.data.xp;
+      document.getElementById('reportTasks').textContent = '4/4';
+      document.getElementById('reportBadges').textContent = Game.data.badges.length;
+      const total = Game.data.stats.correct + Game.data.stats.wrong;
+      const acc = total > 0 ? Math.round((Game.data.stats.correct / total) * 100) : 100;
+      document.getElementById('reportAccuracy').textContent = acc + '%';
+      document.getElementById('reportFeedback').innerHTML =
+        '🎓 <b>الدرس المستفاد:</b> التصيّد يعتمد على الاستعجال، الطمع، والخوف. تحقق دائماً من:<br>' +
+        '1. نطاق المرسل (بعد @)<br>' +
+        '2. الرابط قبل الضغط<br>' +
+        '3. لا تشارك OTP أو بيانات بنكية<br>' +
+        '4. شكّك في أي رسالة تستعجلك';
+      report.scrollIntoView({ behavior: 'smooth' });
+    }, 800);
+  }
+});
