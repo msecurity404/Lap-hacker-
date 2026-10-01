@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المستوى 1 | كلمات المرور</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body class="level-body">
+
+<header class="level-header">
+  <a href="dashboard.html" class="btn-back">⬅ رجوع</a>
+  <h2>المستوى 1: كلمات المرور 🔑</h2>
+  <div class="level-score-display">🏆 <span id="liveScore">0</span></div>
+</header>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<main class="level-main">
+
+  <!-- المهمة 1 -->
+  <section class="mission" data-mission="1">
+    <div class="mission-header">
+      <span class="mission-num">مهمة 1</span>
+      <h3>🔍 صيّاد كلمات المرور الضعيفة</h3>
+      <span class="mission-xp">+80 XP</span>
+    </div>
+    <p class="mission-desc">صنّف كل كلمة مرور إلى: ضعيفة / متوسطة / قوية</p>
+    <div id="passwordList" class="password-list"></div>
+    <p class="mission-status" id="mission1Status"></p>
+  </section>
+
+  <!-- المهمة 2 -->
+  <section class="mission" data-mission="2">
+    <div class="mission-header">
+      <span class="mission-num">مهمة 2</span>
+      <h3>📊 مختبر قوة كلمة المرور</h3>
+      <span class="mission-xp">+60 XP</span>
+    </div>
+    <p class="mission-desc">اكتب كلمة مرور وشوف تحليل حقيقي: قوة، نقاط ضعف، وقت الكسر</p>
+    <input type="text" id="pwdTest" class="input-field mono" placeholder="جرب كلمة المرور هنا..." oninput="analyzePassword()">
+    <div class="strength-meter">
+      <div class="strength-fill" id="strengthFill"></div>
+    </div>
+    <div class="analysis-grid" id="analysisResults" style="display:none;">
+      <div class="analysis-card"><span>القوة</span><strong id="resStrength">-</strong></div>
+      <div class="analysis-card"><span>الطول</span><strong id="resLength">-</strong></div>
+      <div class="analysis-card"><span>التنوّع</span><strong id="resVariety">-</strong></div>
+      <div class="analysis-card"><span>وقت الكسر</span><strong id="resTime">-</strong></div>
+    </div>
+    <div id="pwdTips" class="tips-box" style="display:none;"></div>
+  </section>
+
+  <!-- المهمة 3 -->
+  <section class="mission" data-mission="3">
+    <div class="mission-header">
+      <span class="mission-num">مهمة 3</span>
+      <h3>⚔️ هجوم القاموس الحقيقي</h3>
+      <span class="mission-xp">+100 XP</span>
+    </div>
+    <p class="mission-desc">شوف كيف البوت يكسر كلمات المرور الضعيفة في ثواني</p>
+    <div class="target-box">
+      <label>🎯 كلمة مرور الهدف:</label>
+      <input type="text" id="targetPwd" class="input-field mono" value="admin123">
+      <button class="btn-main" onclick="startDictionaryAttack()">🚀 شنّ الهجوم</button>
+    </div>
+    <div class="terminal-box-hack">
+      <div class="terminal-top">
+        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        <span class="term-title">attack@cyberlab:~#</span>
+      </div>
+      <div class="terminal-content" id="attackTerminal">
+        <p class="term-line">> في انتظار الأمر...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- المهمة 4 -->
+  <section class="mission" data-mission="4">
+    <div class="mission-header">
+      <span class="mission-num">مهمة 4</span>
+      <h3>🔐 التحقق بخطوتين (2FA)</h3>
+      <span class="mission-xp">+60 XP</span>
+    </div>
+    <p class="mission-desc">سجّل دخولك، واثبت إن الحساب محمي حتى لو سُرقت كلمة المرور</p>
+    <div class="login-sim">
+      <input type="text" id="simUser" class="input-field" placeholder="اسم المستخدم">
+      <input type="password" id="simPass" class="input-field" placeholder="كلمة المرور">
+      <button class="btn-main" onclick="requestOTP()">📩 إرسال رمز OTP</button>
+    </div>
+    <div id="otpBox" class="otp-box" style="display:none;">
+      <div class="otp-notification">
+        📱 <b>رسالة SMS وهمية:</b>
+        <div class="otp-code" id="otpCode">------</div>
+      </div>
+      <input type="text" id="otpInput" class="input-field mono" placeholder="أدخل الرمز" maxlength="6">
+      <button class="btn-main" onclick="verifyOTP()">✅ تحقق</button>
+      <p class="otp-timer" id="otpTimer"></p>
+    </div>
+    <p class="mission-status" id="mission4Status"></p>
+  </section>
+
+  <!-- شاشة التقييم النهائي -->
+  <div class="final-report" id="finalReport">
+    <div class="report-header">
+      <h2>🏆 تقرير المستوى 1</h2>
+      <p>تحليل أدائك الكامل</p>
+    </div>
+    <div class="report-body">
+      <div class="report-rank" id="reportRank">-</div>
+      <div class="report-stats">
+        <div class="r-stat"><span>XP المكتسب</span><strong id="reportXP">0</strong></div>
+        <div class="r-stat"><span>المهام المنجزة</span><strong id="reportTasks">0/4</strong></div>
+        <div class="r-stat"><span>الشارات</span><strong id="reportBadges">0</strong></div>
+        <div class="r-stat"><span>الدقة</span><strong id="reportAccuracy">-%</strong></div>
+      </div>
+      <div class="report-feedback" id="reportFeedback"></div>
+      <button class="btn-main" onclick="location.href='dashboard.html'">🎯 رجوع للمستويات</button>
+    </div>
+  </div>
+
+</main>
+
+<script src="js/game.js"></script>
+<script src="js/level1.js"></script>
+</body>
+</html>
